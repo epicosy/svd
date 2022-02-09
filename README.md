@@ -67,3 +67,36 @@ $ make docker
 
 $ docker run -it svd --help
 ```
+
+
+## Usage
+
+In this example the working directory is the project directory:
+
+```
+$ cd project_root_path/svd
+```
+
+Curate dataset:
+
+```
+$ svd curate -d dataset/dataset.json -o dataset/prepare/dataset.json
+```
+
+Mine dataset:
+
+```
+$ svd mine -d dataset/prepare/dataset.json -o dataset/feature_models/ -nlp dataset/extracted_features/nlp_features/
+```
+
+Plot zipf-log: 
+
+```
+$ svd zipf -d dataset/dataset.json 
+```
+
+Plot histogram: 
+
+```
+$ svd histogram -d dataset/dataset.json 
+```
