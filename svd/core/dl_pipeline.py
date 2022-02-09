@@ -26,16 +26,19 @@ def tokenize_split_dataset(train: pd.DataFrame, test: pd.DataFrame, val: pd.Data
     list_tokenized_train = tokenizer.texts_to_sequences(train.func)
     x_train = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_train, maxlen=input_size, padding='post')
     x_train = x_train.astype(np.int64)
+    print('Train set size: ', len(x_train))
 
     # Tokenizing test data and create matrix
     list_tokenized_test = tokenizer.texts_to_sequences(test.func)
     x_test = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_test, maxlen=input_size, padding='post')
     x_test = x_test.astype(np.int64)
+    print('Test set size: ', len(x_test))
 
     # Tokenizing validate data and create matrix
     list_tokenized_validate = tokenizer.texts_to_sequences(val['func'])
     x_val = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_validate, maxlen=input_size, padding='post')
     x_val = x_val.astype(np.int64)
+    print('Val set size: ', len(x_val))
 
     return x_train, x_test, x_val
 
