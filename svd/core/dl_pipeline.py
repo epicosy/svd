@@ -183,8 +183,8 @@ def train_test_cnn(dataset: pd.DataFrame, input_size: int, vocab_size: int, mode
 
     history_path = callback_dir / "history-epochs-{epochs}-CNN-single"
 
-    if not history_path.exists():
-        history_path.mkdir(parents=True)
+    # if not history_path.exists():
+    #    history_path.mkdir(parents=True)
 
     with history_path.open(mode='wb') as file_pi:
         pickle.dump(history.history, file_pi)
