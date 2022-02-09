@@ -149,6 +149,7 @@ class Base(Controller):
             (['-e', '--epochs'], {'help': 'Number of epochs.', 'type': int, 'default': 40}),
             (['-bs', '--batch_size'], {'help': 'Batch size.', 'type': int, 'default': 128}),
             (['-fs', '--func_size'], {'help': 'Function size in tokens', 'type': int, 'default': 1530}),
+            (['-lr', '--learning_rate'], {'help': 'Learning rate.', 'type': float, 'default': 0.05}),
             (['-mp', '--model_path'], {'help': 'Path to output directory for model.', 'type': str, 'required': True})
         ],
     )
@@ -158,6 +159,6 @@ class Base(Controller):
         dataset = pd.read_csv(self.app.pargs.dataset)
         train_test_cnn(dataset=dataset, input_size=self.app.pargs.func_size, vocab_size=self.app.pargs.vocab_size,
                        model_output=self.app.pargs.model_path, epochs=self.app.pargs.epochs,
-                       batch_size=self.app.pargs.batch_size)
+                       batch_size=self.app.pargs.batch_size, learning_rate=self.app.pargs.learning_rate)
 
 # ['-rp', '--results_path'], {'help': 'Path to output directory for results', 'type': str, 'required': True})

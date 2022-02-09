@@ -43,7 +43,7 @@ def tokenize_split_dataset(train: pd.DataFrame, test: pd.DataFrame, val: pd.Data
     return x_train, x_test, x_val
 
 
-def cnn_model(input_dim: int, input_length: int, random_weights):
+def cnn_model(input_dim: int, input_length: int, random_weights, learning_rate):
     # Must use non-sequential model building to create branches in the output layer
     model = tf.keras.Sequential(name="CNN")
 
@@ -61,7 +61,8 @@ def cnn_model(input_dim: int, input_length: int, random_weights):
     model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
 
     # Define custom optimizers
-    adam = tf.keras.optimizers.Adam(learning_rate=0.05, beta_1=0.9, beta_2=0.999, epsilon=1, decay=0.0, amsgrad=False)
+    adam = tf.keras.optimizers.Adam(learning_rate=learning_rate, beta_1=0.9, beta_2=0.999, epsilon=1, decay=0.0,
+                                    amsgrad=False)
 
     ## Compile model with metrics
     model.compile(optimizer=adam, loss='binary_crossentropy', metrics=['accuracy'])
@@ -145,8 +146,8 @@ def plot_history(model, history):
     plt.show()
 
 
-def train_test_cnn(dataset: pd.DataFrame, input_size: int, vocab_size: int, model_output: str, epochs: int = 40,
-                   batch_size: int = 128):
+def train_test_cnn(dataset: pd.DataFrame, input_size: int, vocab_size: int, model_output: str, learning_rate: float,
+                   epochs: int = 40, batch_size: int = 128):
     print("Tensorlfow version: ", tf.__version__)
     print("Eager mode: ", tf.executing_eagerly())
     print("GPU is", "available" if tf.test.is_gpu_available() else "NOT AVAILABLE")
@@ -172,7 +173,8 @@ def train_test_cnn(dataset: pd.DataFrame, input_size: int, vocab_size: int, mode
     if not callback_dir.exists():
         callback_dir.mkdir(parents=True)
 
-    model = cnn_model(input_dim=vocab_size, input_length=input_size, random_weights=random_weights)
+    model = cnn_model(input_dim=vocab_size, input_length=input_size, random_weights=random_weights,
+                      learning_rate=learning_rate)
     tb_callback, early_stop, mcp = tf_callbacks(model=model, callback_dir=str(callback_dir),
                                                 file_path_fmt=str(
                                                     model_output_path) + "/model-epoch-100-{epoch:02d}-single.hdf5")
