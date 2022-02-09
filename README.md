@@ -98,7 +98,7 @@ $ svd evaluate -d dataset/prepare/dataset.csv -nlp dataset/extracted_features/nl
 Evaluate CNN model:
 
 ```
-$ svd evaluate_cnn -d dataset/prepare/dataset.csv -nlp dataset/extracted_features/nlp_features -rp dataset/results -mp dataset/models -t 8 -m KNN
+$ svd evaluate-cnn -d dataset/prepare/dataset.csv -mp dataset/models/cnn
 ```
 
 Plot zipf-log: 
