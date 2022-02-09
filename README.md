@@ -89,6 +89,18 @@ Mine dataset:
 $ svd mine -d dataset/prepare/dataset.json -o dataset/feature_models/ -nlp dataset/extracted_features/nlp_features/
 ```
 
+Evaluate ML models:
+
+```
+$ svd evaluate -d dataset/prepare/dataset.csv -nlp dataset/extracted_features/nlp_features -rp dataset/results -mp dataset/models -t 8 -m KNN
+```
+
+Evaluate CNN model:
+
+```
+$ svd evaluate_cnn -d dataset/prepare/dataset.csv -nlp dataset/extracted_features/nlp_features -rp dataset/results -mp dataset/models -t 8 -m KNN
+```
+
 Plot zipf-log: 
 
 ```

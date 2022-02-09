@@ -9,14 +9,12 @@ from svd.utils.viz import token_counts, zipf_log, histogram
 from svd.core.mining import get_tokenizer, mine, save_sparse_matrix
 from svd.utils.misc import curate
 from svd.core.ml_pipeline import train_test, load_extracted_features
+from svd.core.dl_pipeline import train_test_cnn
 
 VERSION_BANNER = """
 Software Vulnerability Detection %s
 %s
 """ % (get_version(), get_version_banner())
-
-
-# WORDS SIZE =
 
 
 class Base(Controller):
@@ -87,7 +85,7 @@ class Base(Controller):
             ### add a sample foo option under subcommand namespace
             (['-d', '--dataset'], {'help': 'Dataset path (csv format)', 'type': str, 'required': True}),
             (['-o', '--output'], {'help': 'Dataset output path (csv format)', 'type': str, 'required': True}),
-            (['-is', '--func_size'], {'help': 'Function size in tokens', 'type': int, 'default': 1530}),
+            (['-fs', '--func_size'], {'help': 'Function size in tokens', 'type': int, 'default': 1530}),
         ],
         )
     def curate(self):
@@ -123,7 +121,8 @@ class Base(Controller):
         arguments=[
             ### add a sample foo option under subcommand namespace
             (['-d', '--dataset'], {'help': 'Dataset path (csv format)', 'type': str, 'required': True}),
-            (['-rp', '--results_path'], {'help': 'Path to output directory for results', 'type': str, 'required': True}),
+            (
+            ['-rp', '--results_path'], {'help': 'Path to output directory for results', 'type': str, 'required': True}),
             (['-mp', '--models_path'], {'help': 'Path to output directory for models', 'type': str, 'required': True}),
             (['-p', '--project'], {'help': 'Name of the project', 'type': str, 'required': False, 'default': 'devign'}),
             (['-nlp', '--nlp_dir'], {'help': 'Path to the directory with extracted nlp features', 'type': str,
@@ -141,3 +140,22 @@ class Base(Controller):
         train_test(dataset, model_name=self.app.pargs.model, project_name=self.app.pargs.project,
                    nlp_features=extracted_features_sparse, n_jobs=self.app.pargs.threads,
                    results_path=self.app.pargs.results_path, model_out_path=self.app.pargs.models_path)
+
+    @ex(help='Evaluate CNN model on dataset',
+        arguments=[
+            ### add a sample foo option under subcommand namespace
+            (['-d', '--dataset'], {'help': 'Dataset path (csv format)', 'type': str, 'required': True}),
+            (['-vs', '--vocab_size'], {'help': 'Vocab size.', 'type': int, 'default': 3100}),
+            (['-e', '--epochs'], {'help': 'Number of epochs.', 'type': int, 'default': 40}),
+            (['-fs', '--func_size'], {'help': 'Function size in tokens', 'type': int, 'default': 1530}),
+            (['-mp', '--model_path'], {'help': 'Path to output directory for model.', 'type': str, 'required': True})
+        ],
+    )
+    def evaluate_cnn(self):
+        # callbackdir = '/content/devign/data/cb'
+        # '/content/devign/data/cb/history'
+        dataset = pd.read_csv(self.app.pargs.dataset)
+        train_test_cnn(dataset=dataset, input_size=self.app.pargs.func_size, vocab_size=self.app.pargs.vocab_size,
+                       model_output=self.app.pargs.model_path, epochs=self.app.pargs.epochs)
+
+# ['-rp', '--results_path'], {'help': 'Path to output directory for results', 'type': str, 'required': True})
