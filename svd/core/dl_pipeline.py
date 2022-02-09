@@ -142,6 +142,7 @@ def plot_history(model, history):
 
     axs[1].set_title('Training vs Validation accuracy')
     axs[1].legend()
+    plt.show()
 
 
 def train_test_cnn(dataset: pd.DataFrame, input_size: int, vocab_size: int, model_output: str, epochs: int = 40,
