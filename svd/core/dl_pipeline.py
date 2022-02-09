@@ -12,7 +12,7 @@ from svd.core.mining import gen_tok_pattern
 from svd.utils.misc import train_val_test_split
 
 
-def tokenize_split_dataset(train: pd.DataFrame, test: pd.DataFrame, val: pd.DataFrame, vocab_size: int):
+def tokenize_split_dataset(train: pd.DataFrame, test: pd.DataFrame, val: pd.DataFrame, vocab_size: int, input_size: int):
     # Create source code sdata for tokenization
     x_all = train['func']
 
@@ -24,17 +24,17 @@ def tokenize_split_dataset(train: pd.DataFrame, test: pd.DataFrame, val: pd.Data
 
     # Tokenizing train data and create matrix
     list_tokenized_train = tokenizer.texts_to_sequences(train.func)
-    x_train = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_train, maxlen=vocab_size, padding='post')
+    x_train = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_train, maxlen=input_size, padding='post')
     x_train = x_train.astype(np.int64)
 
     # Tokenizing test data and create matrix
     list_tokenized_test = tokenizer.texts_to_sequences(test.func)
-    x_test = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_test, maxlen=vocab_size, padding='post')
+    x_test = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_test, maxlen=input_size, padding='post')
     x_test = x_test.astype(np.int64)
 
     # Tokenizing validate data and create matrix
     list_tokenized_validate = tokenizer.texts_to_sequences(val['func'])
-    x_val = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_validate, maxlen=vocab_size, padding='post')
+    x_val = tf.keras.preprocessing.sequence.pad_sequences(list_tokenized_validate, maxlen=input_size, padding='post')
     x_val = x_val.astype(np.int64)
 
     return x_train, x_test, x_val
@@ -155,7 +155,7 @@ def train_test_cnn(dataset: pd.DataFrame, input_size: int, vocab_size: int, mode
 
     # dataset.target = dataset.target.apply(lambda target: False if target == 0 else True)
     train, test, val = train_val_test_split(dataset)
-    x_train, x_test, x_val = tokenize_split_dataset(train, test, val, vocab_size)
+    x_train, x_test, x_val = tokenize_split_dataset(train, test, val, vocab_size, input_size=input_size)
 
     # Create a random weights matrix
     random_weights = np.random.normal(size=(vocab_size, round(vocab_size ** 0.25)), scale=0.01)
